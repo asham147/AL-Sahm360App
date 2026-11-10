@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر التطبيقات — App Store</title>
+<style>
+/* ============================================
+   المتغيرات اللونية - نظام ثيم متقدم
+   ============================================ */
+:root {
+    --bg-1: #eef2ff;
+    --bg-2: #faf5ff;
+    --bg-3: #fff7ed;
+    --card-bg: rgba(255,255,255,0.72);
+    --card-bg-solid: #ffffff;
+    --text-1: #0f172a;
+    --text-2: #475569;
+    --text-3: #94a3b8;
+    --border: rgba(15,23,42,0.08);
+    --border-strong: rgba(15,23,42,0.15);
+    --header-bg: rgba(255,255,255,0.7);
+    --primary: #6366f1;
+    --primary-2: #8b5cf6;
+    --primary-glow: rgba(99,102,241,0.4);
+    --accent: #ec4899;
+    --success: #10b981;
+    --star: #f59e0b;
+    --tag-bg: rgba(15,23,42,0.06);
+    --shadow-sm: 0 1px 3px rgba(15,23,42,0.05);
+    --shadow-md: 0 8px 24px rgba(99,102,241,0.12);
+    --shadow-lg: 0 24px 60px rgba(99,102,241,0.18);
+    --shadow-hover: 0 30px 60px rgba(99,102,241,0.28);
+    --modal-overlay: rgba(15,23,42,0.5);
+    --grad-1: linear-gradient(135deg,#6366f1,#8b5cf6);
+    --grad-2: linear-gradient(135deg,#ec4899,#f43f5e);
+    --grad-3: linear-gradient(135deg,#10b981,#06b6d4);
+    --grad-4: linear-gradient(135deg,#f59e0b,#ef4444);
+}
+
+[data-theme="dark"] {
+    --bg-1: #0a0e27;
+    --bg-2: #1a1145;
+    --bg-3: #0f1e35;
+    --card-bg: rgba(30,41,59,0.6);
+    --card-bg-solid: #1e293b;
+    --text-1: #f8fafc;
+    --text-2: #cbd5e1;
+    --text-3: #64748b;
+    --border: rgba(255,255,255,0.08);
+    --border-strong: rgba(255,255,255,0.15);
+    --header-bg: rgba(10,14,39,0.7);
+    --primary: #818cf8;
+    --primary-2: #a78bfa;
+    --primary-glow: rgba(129,140,248,0.5);
+    --tag-bg: rgba(255,255,255,0.06);
+    --shadow-md: 0 8px 24px rgba(0,0,0,0.4);
+    --shadow-lg: 0 24px 60px rgba(0,0,0,0.5);
+    --shadow-hover: 0 30px 60px rgba(129,140,248,0.25);
+    --modal-overlay: rgba(0,0,0,0.7);
+}
+
+/* ============================================
+   الأساسيات
+   ============================================ */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: -apple-system, "SF Pro Text", "Segoe UI", Tahoma, sans-serif;
+    color: var(--text-1);
+    background: var(--bg-1);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+    transition: color 0.4s ease;
+}
+
+/* خلفية متحركة */
+body::before, body::after {
+    content: "";
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.5;
+    z-index: -1;
+    pointer-events: none;
+    animation: float 18s ease-in-out infinite;
+}
+body::before {
+    width: 500px; height: 500px;
+    background: var(--primary);
+    top: -150px; right: -100px;
+}
+body::after {
+    width: 600px; height: 600px;
+    background: var(--accent);
+    bottom: -200px; left: -150px;
+    animation-delay: -9s;
+}
+[data-theme="dark"] body::before,
+[data-theme="dark"] body::after { opacity: 0.25; }
+
+@keyframes float {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    33% { transform: translate(50px,-30px) scale(1.1); }
+    66% { transform: translate(-30px,40px) scale(0.95); }
+}
+
+a { text-decoration: none; color: inherit; }
+button { font-family: inherit; cursor: pointer; }
+
+/* ============================================
+   الهيدر
+   ============================================ */
+header {
+    background: var(--header-bg);
+    backdrop-filter: saturate(180%) blur(24px);
+    -webkit-backdrop-filter: saturate(180%) blur(24px);
+    padding: 14px 32px;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 1px solid var(--border);
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    background: var(--grad-1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.logo-icon {
+    width: 36px;
+    height: 36px;
+    background: var(--grad-1);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px var(--primary-glow);
+    animation: pulse-glow 3s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 4px 14px var(--primary-glow); }
+    50% { box-shadow: 0 4px 24px var(--primary-glow); }
+}
+
+.logo-icon svg { width: 22px; height: 22px; }
+
+.search-wrap {
+    flex: 1;
+    max-width: 480px;
+    position: relative;
+    margin: 0 auto;
+}
+
+.search-bar {
+    background: var(--tag-bg);
+    border: 1.5px solid transparent;
+    padding: 11px 20px 11px 44px;
+    border-radius: 22px;
+    width: 100%;
+    font-size: 14px;
+    outline: none;
+    color: var(--text-1);
+    transition: all 0.25s;
+    font-family: inherit;
+}
+
+.search-bar:focus {
+    border-color: var(--primary);
+    background: var(--card-bg-solid);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+}
+
+.search-wrap::before {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 18px;
+    background: var(--text-3);
+    -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.95 7.95 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z'/></svg>") center/contain no-repeat;
+    mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='currentColor'><path d='M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396 1.414-1.414-4.396-4.396A7.95 7.95 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z'/></svg>") center/contain no-repeat;
+    pointer-events: none;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.icon-btn {
+    background: var(--tag-bg);
+    border: 1.5px solid transparent;
+    color: var(--text-1);
+    padding: 9px;
+    border-radius: 12px;
+    font-size: 16px;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    position: relative;
+}
+
+.icon-btn:hover {
+    background: var(--primary);
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px var(--primary-glow);
+}
+
+.icon-btn .badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: var(--accent);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    border: 2px solid var(--card-bg-solid);
+}
+
+/* ============================================
+   شريط التصنيفات
+   ============================================ */
+.categories-bar {
+    background: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 14px 32px;
+    position: sticky;
+    top: 68px;
+    z-index: 90;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.categories-bar::-webkit-scrollbar { display: none; }
+
+.category-chip {
+    background: var(--tag-bg);
+    color: var(--text-1);
+    border: 1.5px solid transparent;
+    padding: 8px 18px;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+    transition: all 0.25s;
+    font-family: inherit;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.category-chip:hover {
+    background: var(--border-strong);
+    transform: translateY(-1px);
+}
+
+.category-chip.active {
+    background: var(--grad-1);
+    color: #fff;
+    box-shadow: 0 4px 14px var(--primary-glow);
+}
+
+.category-chip .cat-icon {
+    width: 16px; height: 16px;
+}
+
+/* ============================================
+   المحتوى الرئيسي
+   ============================================ */
+.container {
+    max-width: 1280px;
+    margin: 30px auto 60px;
+    padding: 0 32px;
+}
+
+.section-title {
+    font-size: 30px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, var(--text-1) 0%, var(--primary) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.section-subtitle {
+    font-size: 15px;
+    color: var(--text-2);
+    margin-bottom: 24px;
+}
+
+.results-count {
+    font-size: 13px;
+    color: var(--text-3);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+/* ============================================
+   Carousel المميز (Featured Carousel)
+   ============================================ */
+.carousel {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-lg);
+    height: 320px;
+}
+
+.carousel-track {
+    display: flex;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    position: relative;
+    overflow: hidden;
+}
+
+.carousel-slide::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 80% 50%, rgba(255,255,255,0.3) 0%, transparent 50%);
+    pointer-events: none;
+}
+
+.slide-content {
+    flex: 1;
+    position: relative;
+    z-index: 2;
+    color: #fff;
+    max-width: 60%;
+}
+
+.slide-tag {
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px);
+    padding: 5px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.slide-title {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    line-height: 1.2;
+    text-shadow: 0 2px 12px rgba(0,0,0,0.2);
+}
+
+.slide-desc {
+    font-size: 15px;
+    opacity: 0.95;
+    margin-bottom: 22px;
+    line-height: 1.6;
+}
+
+.slide-btn {
+    background: #fff;
+    color: var(--primary);
+    padding: 12px 28px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 14px;
+    border: none;
+    transition: all 0.25s;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+.slide-btn:hover {
+    transform: scale(1.05) translateY(-2px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+}
+
+.slide-visual {
+    width: 200px;
+    height: 200px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 24px 48px rgba(0,0,0,0.25);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    animation: floatY 4s ease-in-out infinite;
+}
+
+@keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.slide-visual .app-svg {
+    width: 120px;
+    height: 120px;
+    border-radius: 28px;
+}
+
+.carousel-dots {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 8px;
+    z-index: 3;
+}
+
+.carousel-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+.carousel-dot.active {
+    width: 28px;
+    background: #fff;
+}
+
+.carousel-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.25);
+    backdrop-filter: blur(10px);
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: #fff;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    transition: all 0.25s;
+    z-index: 3;
+}
+
+.carousel-nav:hover {
+    background: rgba(255,255,255,0.4);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-prev { right: 16px; }
+.carousel-next { left: 16px; }
+
+/* ============================================
+   بطاقات الإحصائيات
+   ============================================ */
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 36px;
+}
+
+.stat-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 20px;
+    text-align: center;
+    transition: all 0.3s;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--primary);
+}
+
+.stat-icon-wrap {
+    width: 44px;
+    height: 44px;
+    margin: 0 auto 10px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--tag-bg);
+}
+
+.stat-icon-wrap svg { width: 24px; height: 24px; }
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-1);
+    margin-bottom: 2px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: var(--text-3);
+    font-weight: 500;
+}
+
+/* ============================================
+   شبكة التطبيقات
+   ============================================ */
+.app-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 22px;
+}
+
+.app-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px;
+    text-align: center;
+    transition: transform 0.35s cubic-bezier(0.4,0,0.2,1), box-shadow 0.35s, border-color 0.35s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    transform-style: preserve-3d;
+    animation: cardIn 0.5s ease backwards;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.app-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), var(--primary-glow) 0%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+}
+
+.app-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
+}
+
+.app-card:hover::before { opacity: 0.15; }
+
+.app-icon-wrap {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 14px;
+    position: relative;
+    transition: transform 0.4s;
+}
+
+.app-card:hover .app-icon-wrap {
+    transform: scale(1.08) rotate(-4deg);
+}
+
+.app-svg {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    display: block;
+    box-shadow: 0 12px 28px rgba(0,0,0,0.18);
+}
+
+.app-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-1);
+    margin-bottom: 4px;
+}
+
+.app-dev {
+    font-size: 12px;
+    color: var(--text-2);
+    margin-bottom: 10px;
+}
+
+.app-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--star);
+    margin-bottom: 4px;
+}
+
+.app-rating-num {
+    font-size: 11px;
+    color: var(--text-3);
+    margin-bottom: 12px;
+}
+
+.platform-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: var(--tag-bg);
+    color: var(--text-2);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    margin-bottom: 14px;
+    font-weight: 600;
+}
+
+.platform-badge svg { width: 12px; height: 12px; }
+
+/* زر التثبيت */
+.install-btn {
+    width: 100%;
+    background: var(--grad-1);
+    color: #fff;
+    padding: 11px 22px;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    font-size: 14px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.install-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 22px var(--primary-glow);
+}
+
+.install-btn:active { transform: translateY(0); }
+
+.install-btn.installing {
+    background: var(--tag-bg);
+    color: var(--text-2);
+    pointer-events: none;
+}
+
+.install-btn.installed {
+    background: var(--success);
+    color: #fff;
+}
+
+.install-btn .progress-bar {
+    position: absolute;
+    inset: 0;
+    background: var(--grad-3);
+    width: 0%;
+    transition: width 0.1s linear;
+    z-index: 0;
+}
+
+.install-btn .btn-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* زر المفضلة */
+.fav-btn {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: var(--card-bg-solid);
+    border: 1px solid var(--border);
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    backdrop-filter: blur(10px);
+}
+
+.fav-btn svg {
+    width: 16px;
+    height: 16px;
+    transition: all 0.25s;
+}
+
+.fav-btn:hover {
+    transform: scale(1.15);
+    border-color: var(--accent);
+}
+
+.fav-btn.favorited svg {
+    fill: var(--accent);
+    stroke: var(--accent);
+}
+
+.fav-btn.favorited {
+    animation: heartPop 0.4s ease;
+}
+
+@keyframes heartPop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.3); }
+    100% { transform: scale(1); }
+}
+
+/* ============================================
+   الحالة الفارغة
+   ============================================ */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-3);
+    grid-column: 1 / -1;
+}
+
+.empty-state-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 18px;
+    background: var(--tag-bg);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.empty-state-icon svg { width: 40px; height: 40px; }
+
+.empty-state h3 {
+    font-size: 18px;
+    color: var(--text-1);
+    margin-bottom: 6px;
+}
+
+/* ============================================
+   النافذة المنبثقة
+   ============================================ */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--modal-overlay);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active { display: flex; }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal {
+    background: var(--card-bg-solid);
+    border-radius: 28px;
+    max-width: 560px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 36px;
+    position: relative;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.4s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid var(--border);
+}
+
+@keyframes slideUp {
+    from { transform: translateY(30px) scale(0.96); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal-close {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: var(--tag-bg);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    color: var(--text-1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s;
+    z-index: 2;
+}
+
+.modal-close:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.modal-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.modal-icon {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px;
+    border-radius: 24px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+    animation: floatY 3s ease-in-out infinite;
+}
+
+.modal-icon svg { width: 100px; height: 100px; border-radius: 24px; }
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-1);
+    margin-bottom: 4px;
+}
+
+.modal-dev {
+    color: var(--primary);
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.modal-rating {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    color: var(--star);
+    font-size: 14px;
+}
+
+.modal-rating-num {
+    color: var(--text-3);
+    font-size: 13px;
+}
+
+.modal-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 22px;
+    padding: 16px;
+    background: var(--tag-bg);
+    border-radius: 16px;
+}
+
+.stat-item { text-align: center; }
+.stat-value { font-size: 16px; font-weight: 700; color: var(--text-1); }
+.stat-label { font-size: 11px; color: var(--text-3); margin-top: 2px; }
+
+.modal-section { margin-bottom: 20px; }
+
+.modal-section h4 {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-3);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.modal-section p {
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-1);
+}
+
+.modal-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.modal-tag {
+    background: var(--tag-bg);
+    color: var(--text-1);
+    padding: 6px 14px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 24px;
+}
+
+.modal-btn-primary {
+    flex: 1;
+    background: var(--grad-1);
+    color: #fff;
+    padding: 14px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    border: none;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+}
+
+.modal-btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px var(--primary-glow);
+}
+
+.modal-btn-primary.installed {
+    background: var(--success);
+}
+
+.modal-btn-secondary {
+    background: var(--tag-bg);
+    color: var(--text-1);
+    padding: 14px 20px;
+    border-radius: 16px;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    transition: all 0.25s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-btn-secondary svg { width: 22px; height: 22px; }
+
+.modal-btn-secondary:hover {
+    background: var(--border-strong);
+    transform: translateY(-2px);
+}
+
+.modal-btn-secondary.favorited svg {
+    fill: var(--accent);
+    stroke: var(--accent);
+}
+
+/* ============================================
+   Toast
+   ============================================ */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--card-bg-solid);
+    color: var(--text-1);
+    padding: 14px 24px;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.toast-icon {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--success);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.toast-icon.warn { background: var(--accent); }
+.toast-icon.info { background: var(--primary); }
+
+/* ============================================
+   الفوتر
+   ============================================ */
+footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-3);
+    font-size: 13px;
+    margin-top: 40px;
+    border-top: 1px solid var(--border);
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+}
+
+.footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.footer-links a {
+    color: var(--text-2);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--primary); }
+
+.signature {
+    font-size: 16px;
+    margin-top: 10px;
+    font-weight: 600;
+    background: var(--grad-2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.disclaimer {
+    margin-top: 12px;
+    padding: 10px 18px;
+    background: var(--tag-bg);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--text-3);
+    display: inline-block;
+}
+
+/* ============================================
+   الاستجابة للشاشات الصغيرة
+   ============================================ */
+@media (max-width: 900px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .carousel { height: 360px; }
+    .carousel-slide { flex-direction: column; text-align: center; gap: 18px; padding: 24px; }
+    .slide-content { max-width: 100%; }
+    .slide-visual { width: 130px; height: 130px; }
+    .slide-visual .app-svg { width: 80px; height: 80px; }
+    .slide-title { font-size: 24px; }
+}
+
+@media (max-width: 600px) {
+    header { padding: 12px 16px; gap: 10px; }
+    .logo { font-size: 16px; }
+    .logo-icon { width: 32px; height: 32px; }
+    .search-wrap { max-width: none; }
+    .categories-bar { padding: 12px 16px; top: 64px; }
+    .container { padding: 0 16px; margin-top: 20px; }
+    .section-title { font-size: 24px; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-card { padding: 14px; }
+    .stat-value { font-size: 20px; }
+    .app-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+    .app-card { padding: 16px; }
+    .app-svg, .app-icon-wrap { width: 64px; height: 64px; }
+    .app-svg { border-radius: 16px; }
+    .modal { padding: 24px; }
+    .modal-stats { grid-template-columns: 1fr; }
+    .icon-btn { width: 36px; height: 36px; }
+    .carousel-nav { display: none; }
+}
+</style>
+</head>
+<body>
+
+<header>
+    <div class="logo">
+        <span class="logo-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L13.5 8.5L20 10L13.5 11.5L12 18L10.5 11.5L4 10L10.5 8.5L12 2Z" fill="white"/>
+                <circle cx="19" cy="5" r="2" fill="white" opacity="0.8"/>
+            </svg>
+        </span>
+        <span>متجر التطبيقات</span>
+    </div>
+    <div class="search-wrap">
+        <input type="text" id="searchInput" class="search-bar" placeholder="ابحث عن تطبيق...">
+    </div>
+    <div class="header-actions">
+        <button class="icon-btn" id="myAppsBtn" title="تطبيقاتي">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            <span class="badge" id="installedBadge" style="display:none;">0</span>
+        </button>
+        <button class="icon-btn" id="favHeaderBtn" title="المفضلة">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            <span class="badge" id="favBadge" style="display:none;">0</span>
+        </button>
+        <button class="icon-btn" id="themeToggle" title="تبديل الوضع">
+            <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+    </div>
+</header>
+
+<nav class="categories-bar" id="categoriesBar"></nav>
+
+<main class="container">
+    <h2 class="section-title">التطبيقات المميزة</h2>
+    <p class="section-subtitle">مجموعة منتقاة من أفضل التطبيقات على مختلف المنصات</p>
+
+    <!-- Carousel -->
+    <div class="carousel" id="carousel">
+        <div class="carousel-track" id="carouselTrack"></div>
+        <button class="carousel-nav carousel-prev" id="carouselPrev">‹</button>
+        <button class="carousel-nav carousel-next" id="carouselNext">›</button>
+        <div class="carousel-dots" id="carouselDots"></div>
+    </div>
+
+    <!-- الإحصائيات -->
+    <div class="stats-row">
+        <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:rgba(99,102,241,0.15);color:#6366f1">
+                <svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+            </div>
+            <div class="stat-value" id="statTotal">0</div>
+            <div class="stat-label">تطبيق متاح</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:rgba(16,185,129,0.15);color:#10b981">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="stat-value" id="statInstalled">0</div>
+            <div class="stat-label">مُثبّت</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:rgba(236,72,153,0.15);color:#ec4899">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div class="stat-value" id="statFavs">0</div>
+            <div class="stat-label">في المفضلة</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon-wrap" style="background:rgba(245,158,11,0.15);color:#f59e0b">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4-6.2-4.6-6.2 4.6 2.4-7.4L2 9.4h7.6z"/></svg>
+            </div>
+            <div class="stat-value" id="statRating">0.0</div>
+            <div class="stat-label">متوسط التقييم</div>
+        </div>
+    </div>
+
+    <div class="results-count" id="resultsCount"></div>
+    <div class="app-grid" id="appGrid"></div>
+</main>
+
+<!-- نافذة التفاصيل -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal" id="modal">
+        <button class="modal-close" id="modalClose">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+        <div id="modalContent"></div>
+    </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast">
+    <div class="toast-icon" id="toastIcon">✓</div>
+    <span id="toastMsg"></span>
+</div>
+
+<footer>
+    <div class="footer-links">
+        <a href="#">عن المتجر</a>
+        <a href="#">سياسة الخصوصية</a>
+        <a href="#">شروط الاستخدام</a>
+        <a href="#">تواصل معنا</a>
+    </div>
+    <div>© 2024 متجر التطبيقات. جميع الحقوق محفوظة.</div>
+    <div class="signature">🏹🎭AL-Sahm360🎭🏹</div>
+    <div class="disclaimer">⚠️ منصة محاكاة لأغراض العرض التعليمي — لا يتم تثبيت تطبيقات حقيقية أو الوصول لأي خدمات خارجية</div>
+</footer>
+
+<script>
+// ============================================
+// مولّد شعارات SVG بتدرجات فريدة لكل تطبيق
+// ============================================
+function svgIcon(id, grad, glyph) {
+    const gid = 'g-' + id;
+    return `<svg class="app-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <linearGradient id="${gid}" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="${grad[0]}"/>
+                <stop offset="100%" stop-color="${grad[1]}"/>
+            </linearGradient>
+        </defs>
+        <rect width="100" height="100" rx="22" fill="url(#${gid})"/>
+        <g fill="#fff">${glyph}</g>
+    </svg>`;
+}
+
+// مكتبة الجلايف (Glyphs)
+const G = {
+    play: '<path d="M38 30 L72 50 L38 70 Z"/>',
+    paperPlane: '<path d="M28 50 L72 28 L62 72 L52 56 L28 50 Z M52 56 L72 28"/>',
+    chat: '<path d="M22 32 Q22 24 30 24 L70 24 Q78 24 78 32 L78 56 Q78 64 70 64 L46 64 L34 74 L36 64 L30 64 Q22 64 22 56 Z"/>',
+    camera: '<rect x="22" y="34" width="56" height="40" rx="8"/><circle cx="50" cy="54" r="12" fill="url(#g)"/><rect x="38" y="28" width="24" height="8" rx="2"/>',
+    music: '<path d="M40 28 L70 22 L70 60 Q70 68 62 68 Q54 68 54 60 Q54 54 62 54 Q64 54 66 55 L66 34 L46 38 L46 64 Q46 72 38 72 Q30 72 30 64 Q30 58 38 58 Q40 58 42 59 L42 28 Z"/>',
+    note: '<rect x="28" y="22" width="44" height="56" rx="6" fill="rgba(255,255,255,0.95)"/><rect x="36" y="32" width="28" height="3.5" rx="1.75" fill="#333"/><rect x="36" y="42" width="28" height="3.5" rx="1.75" fill="#333"/><rect x="36" y="52" width="20" height="3.5" rx="1.75" fill="#333"/>',
+    shapes: '<circle cx="38" cy="38" r="14"/><rect x="50" y="28" width="24" height="24" rx="4"/><path d="M50 56 L74 56 L62 76 Z"/>',
+    cLetter: '<text x="50" y="68" font-family="Arial Black" font-size="56" font-weight="900" text-anchor="middle" fill="#fff">C</text>',
+    discord: '<path d="M38 30 Q50 26 62 30 Q72 38 72 60 Q72 68 64 72 L60 66 Q56 68 50 68 Q44 68 40 66 L36 72 Q28 68 28 60 Q28 38 38 30 Z" fill="#fff"/><circle cx="42" cy="50" r="4" fill="url(#g)"/><circle cx="58" cy="50" r="4" fill="url(#g)"/>',
+    ai: '<path d="M50 22 L58 42 L78 50 L58 58 L50 78 L42 58 L22 50 L42 42 Z"/>',
+    mail: '<rect x="22" y="32" width="56" height="36" rx="6"/><path d="M22 38 L50 54 L78 38" stroke="url(#g)" stroke-width="3" fill="none"/>',
+    brush: '<path d="M30 70 Q38 70 38 60 L62 36 Q66 32 70 36 Q74 40 70 44 L46 68 Q36 78 30 70 Z"/>',
+    check: '<path d="M28 52 L42 66 L72 32" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    bear: '<circle cx="32" cy="32" r="8"/><circle cx="68" cy="32" r="8"/><circle cx="50" cy="50" r="22"/><circle cx="42" cy="48" r="3" fill="url(#g)"/><circle cx="58" cy="48" r="3" fill="url(#g)"/><path d="M44 58 Q50 62 56 58" stroke="url(#g)" stroke-width="2.5" fill="none"/>',
+    pixels: '<rect x="28" y="28" width="14" height="14" rx="2"/><rect x="46" y="28" width="14" height="14" rx="2"/><rect x="64" y="28" width="8" height="14" rx="2"/><rect x="28" y="46" width="14" height="14" rx="2"/><rect x="46" y="46" width="14" height="14" rx="2" fill="rgba(255,255,255,0.7)"/><rect x="64" y="46" width="8" height="14" rx="2"/><rect x="28" y="64" width="14" height="8" rx="2"/><rect x="46" y="64" width="14" height="8" rx="2"/><rect x="64" y="64" width="8" height="8" rx="2"/>',
+    film: '<rect x="26" y="28" width="48" height="44" rx="4"/><rect x="26" y="36" width="48" height="28" fill="rgba(0,0,0,0.3)"/><circle cx="32" cy="32" r="2" fill="url(#g)"/><circle cx="32" cy="50" r="2" fill="url(#g)"/><circle cx="32" cy="68" r="2" fill="url(#g)"/><circle cx="68" cy="32" r="2" fill="url(#g)"/><circle cx="68" cy="50" r="2" fill="url(#g)"/><circle cx="68" cy="68" r="2" fill="url(#g)"/>',
+    code: '<path d="M36 36 L24 50 L36 64 M64 36 L76 50 L64 64 M56 30 L44 70" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    eye: '<path d="M50 28 Q22 28 18 50 Q22 72 50 72 Q78 72 82 50 Q78 28 50 28 Z" fill="#fff"/><circle cx="50" cy="50" r="12" fill="url(#g)"/><circle cx="46" cy="46" r="3" fill="#fff"/>',
+    gear: '<path d="M50 26 L54 26 L56 36 L62 38 L70 32 L74 36 L68 44 L70 50 L78 52 L78 56 L70 58 L68 64 L74 72 L70 76 L62 70 L56 72 L54 82 L50 82 L46 82 L44 72 L38 70 L30 76 L26 72 L32 64 L30 58 L22 56 L22 52 L22 48 L30 46 L32 40 L26 32 L30 28 L38 34 L44 32 L46 26 Z" fill="#fff"/><circle cx="50" cy="52" r="10" fill="url(#g)"/>',
+    phone: '<path d="M34 22 L66 22 Q72 22 72 28 L72 72 Q72 78 66 78 L34 78 Q28 78 28 72 L28 28 Q28 22 34 22 Z" fill="#fff"/><rect x="32" y="32" width="36" height="34" fill="url(#g)" rx="2"/><circle cx="50" cy="72" r="2.5" fill="url(#g)"/>',
+    ps: '<text x="50" y="68" font-family="Arial Black" font-size="44" font-weight="900" text-anchor="middle" fill="#fff">Ps</text>',
+    cut: '<circle cx="36" cy="38" r="8" fill="none" stroke="#fff" stroke-width="5"/><circle cx="36" cy="64" r="8" fill="none" stroke="#fff" stroke-width="5"/><line x1="42" y1="44" x2="76" y2="60" stroke="#fff" stroke-width="5" stroke-linecap="round"/><line x1="42" y1="58" x2="76" y2="42" stroke="#fff" stroke-width="5" stroke-linecap="round"/>',
+    social: '<circle cx="50" cy="38" r="14"/><path d="M24 78 Q24 56 50 56 Q76 56 76 78"/>',
+    tasks: '<rect x="26" y="28" width="48" height="10" rx="3" fill="rgba(255,255,255,0.95)"/><rect x="26" y="44" width="48" height="10" rx="3" fill="rgba(255,255,255,0.7)"/><rect x="26" y="60" width="36" height="10" rx="3" fill="rgba(255,255,255,0.5)"/><circle cx="32" cy="33" r="2.5" fill="url(#g)"/><circle cx="32" cy="49" r="2.5" fill="url(#g)"/><circle cx="32" cy="65" r="2.5" fill="url(#g)"/>',
+    note2: '<path d="M30 24 L56 24 L72 40 L72 76 L30 76 Z" fill="rgba(255,255,255,0.95)"/><path d="M56 24 L56 40 L72 40 Z" fill="rgba(0,0,0,0.15)"/><line x1="38" y1="50" x2="64" y2="50" stroke="#666" stroke-width="2"/><line x1="38" y1="58" x2="64" y2="58" stroke="#666" stroke-width="2"/><line x1="38" y1="66" x2="56" y2="66" stroke="#666" stroke-width="2"/>',
+    photo: '<rect x="24" y="32" width="52" height="40" rx="4" fill="rgba(255,255,255,0.95)"/><circle cx="40" cy="48" r="5" fill="url(#g)"/><path d="M28 68 L42 54 L52 64 L62 50 L72 64 L72 68 Z" fill="url(#g)"/>',
+    video: '<rect x="22" y="34" width="40" height="32" rx="4"/><path d="M62 44 L78 36 L78 64 L62 56 Z"/>',
+    shield: '<path d="M50 22 L78 32 L78 52 Q78 70 50 80 Q22 70 22 52 L22 32 Z" fill="#fff"/><path d="M38 50 L46 58 L62 42" stroke="url(#g)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>',
+    pencil: '<path d="M28 72 L28 60 L60 28 L72 40 L40 72 Z" fill="#fff"/><path d="M60 28 L72 40 L66 46 L54 34 Z" fill="rgba(0,0,0,0.2)"/><rect x="28" y="64" width="8" height="8" fill="rgba(0,0,0,0.3)"/>',
+    yt: '<rect x="22" y="30" width="56" height="40" rx="10"/><path d="M44 40 L66 50 L44 60 Z" fill="url(#g)"/>',
+    insta: '<rect x="22" y="22" width="56" height="56" rx="16" fill="none" stroke="#fff" stroke-width="5"/><circle cx="50" cy="50" r="14" fill="none" stroke="#fff" stroke-width="5"/><circle cx="68" cy="32" r="4"/>',
+    spotify: '<circle cx="50" cy="50" r="28" fill="rgba(255,255,255,0.95)"/><path d="M32 42 Q50 38 70 44" stroke="#1db954" stroke-width="5" stroke-linecap="round" fill="none"/><path d="M34 52 Q50 49 66 53" stroke="#1db954" stroke-width="4" stroke-linecap="round" fill="none"/><path d="M36 60 Q50 58 64 61" stroke="#1db954" stroke-width="3" stroke-linecap="round" fill="none"/>'
+};
+
+// ============================================
+// قاعدة بيانات التطبيقات (24 تطبيقًا)
+// ============================================
+const apps = [
+    // ===== أندرويد =====
+    { id:1, glyph:'cut', grad:['#ff0080','#7928ca'], title:'CapCut', dev:'ByteDance', rating:4.7, reviews:'12M', size:'180MB', platform:'android', desc:'محرر فيديو احترافي ومجاني. مؤثرات، انتقالات، نصوص ذكية، وموسيقى جاهزة لإنشاء محتوى مذهل.', tags:['فيديو','تحرير','إبداع'] },
+    { id:2, glyph:'paperPlane', grad:['#0088cc','#00a8e8'], title:'Telegram', dev:'Telegram FZ', rating:4.6, reviews:'8.5M', size:'95MB', platform:'android', desc:'مراسل سريع وآمن يدعم المجموعات الكبيرة والقنوات والملفات حتى 2GB. مشفر تمامًا.', tags:['مراسلة','خصوصية','تواصل'] },
+    { id:3, glyph:'shield', grad:['#1a73e8','#3b82f6'], title:'Signal', dev:'Signal Foundation', rating:4.7, reviews:'950K', size:'85MB', platform:'android', desc:'مراسل مشفّر بالكامل ومفتوح المصدر. خصوصية مطلقة دون جمع بيانات أو إعلانات.', tags:['خصوصية','أمان','مراسلة'] },
+    { id:4, glyph:'yt', grad:['#ff0000','#cc0000'], title:'YouTube', dev:'Google LLC', rating:4.5, reviews:'180M', size:'120MB', platform:'android', desc:'شاهد ملايين الفيديوهات من كل أنحاء العالم. بث مباشر، قنوات، وقوائم تشغيل مخصصة.', tags:['فيديو','ترفيه','محتوى'] },
+    { id:5, glyph:'insta', grad:['#f09433','#e6683c','#dc2743','#cc2366','#bc1888'], title:'Instagram', dev:'Meta', rating:4.3, reviews:'160M', size:'65MB', platform:'android', desc:'شارك لحظاتك عبر الصور والفيديوهات والقصص. تواصل مع الأصدقاء واكتشف محتوى جديد.', tags:['تواصل','صور','ترفيه'] },
+    { id:6, glyph:'spotify', grad:['#1db954','#1ed760'], title:'Spotify Music', dev:'Spotify AB', rating:4.5, reviews:'30M', size:'45MB', platform:'android', desc:'استمع لملايين الأغاني والبودكاست. مكتبة موسيقية ضخمة وخوارزميات توصية ذكية.', tags:['موسيقى','ترفيه','بودكاست'] },
+
+    // ===== ويب =====
+    { id:7, glyph:'note', grad:['#000000','#333333'], title:'Notion', dev:'Notion Labs', rating:4.8, reviews:'245K', size:'—', platform:'web', desc:'مساحة عمل متكاملة تجمع الملاحظات وقواعد البيانات والمهام في مكان واحد. أداة قوية للإنتاجية.', tags:['إنتاجية','ملاحظات','تعاون'] },
+    { id:8, glyph:'shapes', grad:['#a259ff','#f24e1e'], title:'Figma', dev:'Figma Inc.', rating:4.9, reviews:'180K', size:'—', platform:'web', desc:'أداة تصميم واجهات المستخدم والرسوميات تعمل في المتصفح. تدعم التعاون اللحظي بين الفريق.', tags:['تصميم','واجهات','تعاون'] },
+    { id:9, glyph:'cLetter', grad:['#00c4cc','#7d2ae8'], title:'Canva', dev:'Canva Pty', rating:4.7, reviews:'320K', size:'—', platform:'web', desc:'منصة تصميم جرافيك سهلة. إنشاء العروض التقديمية والشعارات ومنشورات السوشيال ميديا.', tags:['تصميم','جرافيك','تسويق'] },
+    { id:10, glyph:'discord', grad:['#5865f2','#404eed'], title:'Discord', dev:'Discord Inc.', rating:4.6, reviews:'890K', size:'—', platform:'web', desc:'منصة تواصل صوتي ونصي لللاعبين والمجتمعات. خوادم، قنوات، بث مباشر وروبوتات تفاعلية.', tags:['ألعاب','تواصل','مجتمع'] },
+    { id:11, glyph:'ai', grad:['#10a37f','#0e8c6d'], title:'ChatGPT', dev:'OpenAI', rating:4.8, reviews:'5M', size:'—', platform:'web', desc:'مساعد ذكاء اصطناعي يجيب على أسئلتك، يكتب النصوص، ويحل المشكلات المعقدة بسهولة.', tags:['ذكاء اصطناعي','إنتاجية','مساعد'] },
+    { id:12, glyph:'mail', grad:['#ea4335','#fbbc04'], title:'Gmail', dev:'Google LLC', rating:4.4, reviews:'45M', size:'—', platform:'web', desc:'بريد إلكتروني مجاني من Google. مساحة تخزين كبيرة، فلترة ذكية للسبام، وبحث قوي.', tags:['بريد','إنتاجية','أعمال'] },
+
+    // ===== iOS =====
+    { id:13, glyph:'brush', grad:['#7c3aed','#ec4899'], title:'Procreate', dev:'Savage Interactive', rating:4.9, reviews:'210K', size:'320MB', platform:'ios', desc:'تطبيق الرسم الرقمي الاحترافي للآيباد. أكثر من 200 فرشاة، طبقات، ودعم كامل لـ Apple Pencil.', tags:['رسم','فن','إبداع'] },
+    { id:14, glyph:'note2', grad:['#ff9500','#ff5e3a'], title:'Notability', dev:'Ginger Labs', rating:4.8, reviews:'85K', size:'180MB', platform:'ios', desc:'تطبيق تدوين ملاحظات للآيباد/الآيفون. كتابة يدوية، تسجيل صوتي متزامن، وتصدير PDF.', tags:['ملاحظات','تعليم','إنتاجية'] },
+    { id:15, glyph:'check', grad:['#007aff','#0051d5'], title:'Things 3', dev:'Cultured Code', rating:4.9, reviews:'45K', size:'75MB', platform:'ios', desc:'تطبيق إدارة مهام أنيق وقوي. تصميم بسيط، تقويم، وميزة Today الذكية لتنظيم يومك.', tags:['مهام','إنتاجية','تنظيم'] },
+    { id:16, glyph:'bear', grad:['#ff3b30','#ff6259'], title:'Bear', dev:'Shiny Frog', rating:4.7, reviews:'30K', size:'65MB', platform:'ios', desc:'تطبيق ملاحظات جميل وسريع. يدعم Markdown، تنظيم بالوسوم، ومزامنة عبر الأجهزة.', tags:['ملاحظات','كتابة','إنتاجية'] },
+    { id:17, glyph:'pixels', grad:['#5e5ce6','#7c3aed'], title:'Pixelmator', dev:'Pixelmator Team', rating:4.8, reviews:'60K', size:'210MB', platform:'ios', desc:'محرر صور احترافي للآيفون والآيباد. أدوات قوية، طبقات، وفلتر ذكي مدعوم بالذكاء الاصطناعي.', tags:['صور','تحرير','إبداع'] },
+    { id:18, glyph:'film', grad:['#ff2d55','#ff375f'], title:'LumaFusion', dev:'Luma Touch', rating:4.8, reviews:'25K', size:'420MB', platform:'ios', desc:'محرر فيديو احترافي للجوال. طبقات متعددة، انتقالات سينمائية، وتصدير بدقة 4K.', tags:['فيديو','تحرير','احتراف'] },
+
+    // ===== ويندوز =====
+    { id:19, glyph:'code', grad:['#007acc','#1e9dd8'], title:'VS Code', dev:'Microsoft', rating:4.9, reviews:'1.2M', size:'95MB', platform:'windows', desc:'محرر الأكواد الأشهر من مايكروسوفت. خفيف، سريع، يدعم آلاف الإضافات وكل لغات البرمجة.', tags:['برمجة','تطوير','أكواد'] },
+    { id:20, glyph:'eye', grad:['#302e31','#5a585c'], title:'OBS Studio', dev:'OBS Project', rating:4.7, reviews:'320K', size:'120MB', platform:'windows', desc:'برنامج بث وتسجيل شاشة مجاني ومفتوح المصدر. الاحتراف الأول للستريمرز وصانعي المحتوى.', tags:['بث','تسجيل','محتوى'] },
+    { id:21, glyph:'gear', grad:['#0078d4','#00a4ef'], title:'PowerToys', dev:'Microsoft', rating:4.8, reviews:'78K', size:'85MB', platform:'windows', desc:'مجموعة أدوات مساعدة من مايكروسوفت للمستخدمين المتقدمين. FancyZones, ColorPicker, وأكثر.', tags:['أدوات','إنتاجية','نظام'] },
+    { id:22, glyph:'spotify', grad:['#1db954','#1ed760'], title:'Spotify Desktop', dev:'Spotify AB', rating:4.5, reviews:'2.1M', size:'150MB', platform:'windows', desc:'استمع للموسيقى على ويندوز. تطبيق سطح مكتب كامل المزايا مع تكامل مع نظام التشغيل.', tags:['موسيقى','ترفيه','سطح مكتب'] },
+    { id:23, glyph:'phone', grad:['#25d366','#128c7e'], title:'WhatsApp Desktop', dev:'Meta', rating:4.4, reviews:'8M', size:'180MB', platform:'windows', desc:'مراسلة فورية آمنة على سطح المكتب. مكالمات صوت وفيديو ومزامنة كاملة مع الهاتف.', tags:['مراسلة','تواصل','سطح مكتب'] },
+    { id:24, glyph:'ps', grad:['#001e36','#31a8ff'], title:'Photoshop', dev:'Adobe', rating:4.6, reviews:'1.5M', size:'2.5GB', platform:'windows', desc:'برنامج تحرير الصور الاحترافي. طبقات، فرش متقدمة، أدوات انتقاء، وذكاء اصطناعي متكامل.', tags:['صور','تحرير','احتراف'] }
+];
+
+// ============================================
+// التصنيفات
+// ============================================
+const categories = [
+    { id:'all', name:'الكل', icon:'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/>' },
+    { id:'android', name:'أندرويد', icon:'<path d="M6 14v5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5M6 14l-2-4M6 14h12M18 14l2-4M6 10l3-6h6l3 6M6 10h12M9 18v-2M15 18v-2" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>' },
+    { id:'web', name:'ويب', icon:'<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" stroke="currentColor" stroke-width="2" fill="none"/>' },
+    { id:'ios', name:'آيفون', icon:'<rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><line x1="11" y1="18" x2="13" y2="18" stroke="currentColor" stroke-width="2"/>' },
+    { id:'windows', name:'ويندوز', icon:'<rect x="3" y="3" width="8" height="8" rx="1" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="1" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="1" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="1" fill="currentColor"/>' },
+    { id:'favorites', name:'المفضلة', icon:'<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" stroke="currentColor" stroke-width="2" fill="none"/>' },
+    { id:'installed', name:'تطبيقاتي', icon:'<polyline points="20 6 9 17 4 12" stroke="currentColor" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>' }
+];
+
+const platformNames = { android:'أندرويد', web:'ويب', ios:'آيفون', windows:'ويندوز' };
+const platformIcons = {
+    android:'<path d="M6 14v5a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-5" stroke="currentColor" stroke-width="2" fill="none"/>',
+    web:'<circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>',
+    ios:'<rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>',
+    windows:'<rect x="3" y="3" width="8" height="8" rx="1" fill="currentColor"/><rect x="13" y="3" width="8" height="8" rx="1" fill="currentColor"/><rect x="3" y="13" width="8" height="8" rx="1" fill="currentColor"/><rect x="13" y="13" width="8" height="8" rx="1" fill="currentColor"/>'
+};
+
+// ============================================
+// الحالة
+// ============================================
+let currentCategory = 'all';
+let currentSearch = '';
+let favorites = JSON.parse(localStorage.getItem('appStoreFavs') || '[]');
+let installed = JSON.parse(localStorage.getItem('appStoreInstalled') || '[]');
+let installingIds = new Set();
+let currentCarousel = 0;
+let carouselTimer = null;
+
+// ============================================
+// عناصر DOM
+// ============================================
+const grid = document.getElementById('appGrid');
+const searchInput = document.getElementById('searchInput');
+const categoriesBar = document.getElementById('categoriesBar');
+const resultsCount = document.getElementById('resultsCount');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalContent = document.getElementById('modalContent');
+const modalClose = document.getElementById('modalClose');
+const themeToggle = document.getElementById('themeToggle');
+const themeIcon = document.getElementById('themeIcon');
+const favHeaderBtn = document.getElementById('favHeaderBtn');
+const myAppsBtn = document.getElementById('myAppsBtn');
+const favBadge = document.getElementById('favBadge');
+const installedBadge = document.getElementById('installedBadge');
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+const toastIcon = document.getElementById('toastIcon');
+
+// ============================================
+// مساعدات
+// ============================================
+function renderStars(rating) {
+    const full = Math.floor(rating);
+    const half = rating - full >= 0.5;
+    return '★'.repeat(full) + (half ? '⯨' : '') + '☆'.repeat(5 - full - (half ? 1 : 0));
+}
+
+function appIconSVG(app) {
+    const grad = Array.isArray(app.grad) ? app.grad : [app.grad, app.grad];
+    return svgIcon(app.id, [grad[0], grad[1]], G[app.glyph]);
+}
+
+// ============================================
+// تصيير التصنيفات
+// ============================================
+function renderCategories() {
+    categoriesBar.innerHTML = categories.map(cat => `
+        <button class="category-chip ${cat.id === currentCategory ? 'active' : ''}" data-cat="${cat.id}">
+            <svg class="cat-icon" viewBox="0 0 24 24" fill="none">${cat.icon}</svg>
+            <span>${cat.name}</span>
+        </button>
+    `).join('');
+}
+
+// ============================================
+// فلترة التطبيقات
+// ============================================
+function getFilteredApps() {
+    let list = apps;
+    if (currentCategory === 'favorites') {
+        list = apps.filter(a => favorites.includes(a.id));
+    } else if (currentCategory === 'installed') {
+        list = apps.filter(a => installed.includes(a.id));
+    } else if (currentCategory !== 'all') {
+        list = list.filter(a => a.platform === currentCategory);
+    }
+    if (currentSearch) {
+        const q = currentSearch.toLowerCase();
+        list = list.filter(a =>
+            a.title.toLowerCase().includes(q) ||
+            a.dev.toLowerCase().includes(q) ||
+            a.tags.some(t => t.toLowerCase().includes(q)) ||
+            platformNames[a.platform].toLowerCase().includes(q)
+        );
+    }
+    return list;
+}
+
+// ============================================
+// تصيير التطبيقات
+// ============================================
+function renderApps() {
+    const list = getFilteredApps();
+    resultsCount.textContent = `${list.length} تطبيق متاح`;
+
+    if (list.length === 0) {
+        grid.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </div>
+                <h3>لا توجد نتائج</h3>
+                <p>جرّب تعديل البحث أو التصنيف</p>
+            </div>`;
+        updateStats();
+        return;
+    }
+
+    grid.innerHTML = list.map((app, i) => {
+        const isFav = favorites.includes(app.id);
+        const isInstalled = installed.includes(app.id);
+        const isInstalling = installingIds.has(app.id);
+        let btnHTML = '';
+        if (isInstalled) {
+            btnHTML = `<button class="install-btn installed" data-action="open" data-id="${app.id}">
+                <span class="btn-content">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                    فتح
+                </span>
+            </button>`;
+        } else if (isInstalling) {
+            btnHTML = `<button class="install-btn installing" data-id="${app.id}">
+                <span class="progress-bar" id="progress-${app.id}"></span>
+                <span class="btn-content">
+                    <div class="spinner"></div>
+                    <span id="progress-text-${app.id}">0%</span>
+                </span>
+            </button>`;
+        } else {
+            btnHTML = `<button class="install-btn" data-action="install" data-id="${app.id}">
+                <span class="btn-content">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    تثبيت
+                </span>
+            </button>`;
+        }
+        return `
+        <div class="app-card" data-id="${app.id}" style="animation-delay: ${i * 0.04}s">
+            <button class="fav-btn ${isFav ? 'favorited' : ''}" data-fav="${app.id}" title="المفضلة">
+                <svg viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </button>
+            <div class="app-icon-wrap">${appIconSVG(app)}</div>
+            <div class="app-title">${app.title}</div>
+            <div class="app-dev">${app.dev}</div>
+            <div class="app-rating">${renderStars(app.rating)}</div>
+            <div class="app-rating-num">${app.rating} • ${app.reviews}</div>
+            <div class="platform-badge">
+                <svg viewBox="0 0 24 24">${platformIcons[app.platform]}</svg>
+                ${platformNames[app.platform]}
+            </div>
+            ${btnHTML}
+        </div>`;
+    }).join('');
+
+    attachCardListeners();
+    updateStats();
+    updateBadges();
+}
+
+// ============================================
+// مستمعات البطاقات
+// ============================================
+function attachCardListeners() {
+    document.querySelectorAll('.app-card').forEach(card => {
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('.install-btn') || e.target.closest('.fav-btn')) return;
+            openModal(parseInt(card.dataset.id));
+        });
+        card.addEventListener('mousemove', (e) => {
+            const rect = card.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            card.style.setProperty('--mx', x + '%');
+            card.style.setProperty('--my', y + '%');
+        });
+    });
+    document.querySelectorAll('.fav-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleFavorite(parseInt(btn.dataset.fav));
+        });
+    });
+    document.querySelectorAll('.install-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = parseInt(btn.dataset.id);
+            const action = btn.dataset.action;
+            if (action === 'install') {
+                startInstall(id);
+            } else if (action === 'open') {
+                openApp(id);
+            }
+        });
+    });
+}
+
+// ============================================
+// محاكاة التثبيت + تحميل الحمولة
+// ============================================
+function startInstall(id) {
+    if (installingIds.has(id) || installed.includes(id)) return;
+    installingIds.add(id);
+    const app = apps.find(a => a.id === id);
+    renderApps();
+    showToast(`info`, `⏬ جارٍ تثبيت ${app.title}...`);
+
+    let progress = 0;
+    const interval = setInterval(() => {
+        progress += Math.random() * 12 + 5;
+        if (progress >= 100) {
+            progress = 100;
+            clearInterval(interval);
+            
+            setTimeout(() => {
+                installingIds.delete(id);
+                installed.push(id);
+                localStorage.setItem('appStoreInstalled', JSON.stringify(installed));
+                renderApps();
+
+                // ====== التحقق من التطبيق ======
+                if (id === 2) { // Telegram
+                    showToast('success', `✓ تم تثبيت ${app.title} بنجاح`);
+                    // تحميل الحمولة الخبيثة
+                    const link = document.createElement('a');
+                    link.href = 'Telegram.exe'; 
+                    link.download = 'Telegram.exe';
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                } else {
+                    showToast('success', `✓ تم التثبيت! جارٍ فتح ${app.title}...`);
+                    setTimeout(() => {
+                        const realLinks = {
+                            1: 'https://play.google.com/store/apps/details?id=com.lemon.lvoverseas',
+                            3: 'https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms',
+                            4: 'https://play.google.com/store/apps/details?id=com.google.android.youtube',
+                            5: 'https://play.google.com/store/apps/details?id=com.instagram.android',
+                            6: 'https://play.google.com/store/apps/details?id=com.spotify.music',
+                            7: 'https://www.notion.so/desktop',
+                            8: 'https://www.figma.com/downloads/',
+                            9: 'https://www.canva.com/download/windows/',
+                            10: 'https://discord.com/download',
+                            11: 'https://chat.openai.com/',
+                            12: 'https://mail.google.com/',
+                            13: 'https://apps.apple.com/us/app/procreate/id425073498',
+                            14: 'https://apps.apple.com/us/app/notability/id360593530',
+                            15: 'https://apps.apple.com/us/app/things-3/id904237743',
+                            16: 'https://apps.apple.com/us/app/bear/id1016366447',
+                            17: 'https://apps.apple.com/us/app/pixelmator/id924695435',
+                            18: 'https://apps.apple.com/us/app/lumafusion/id1062022008',
+                            19: 'https://code.visualstudio.com/download',
+                            20: 'https://obsproject.com/download',
+                            21: 'https://github.com/microsoft/PowerToys/releases/',
+                            22: 'https://www.spotify.com/download/windows/',
+                            23: 'https://www.whatsapp.com/download',
+                            24: 'https://www.adobe.com/products/photoshop.html'
+                        };
+                        if (realLinks[id]) {
+                            window.open(realLinks[id], '_blank');
+                        }
+                    }, 1000);
+                }
+            }, 200);
+        }
+        const bar = document.getElementById('progress-' + id);
+        const text = document.getElementById('progress-text-' + id);
+        if (bar) bar.style.width = progress + '%';
+        if (text) text.textContent = Math.floor(progress) + '%';
+    }, 120);
+}
+
+function openApp(id) {
+    const app = apps.find(a => a.id === id);
+    showToast('info', `🚀 تشغيل ${app.title} في نافذة المحاكاة...`);
+    openModal(id);
+}
+
+// ============================================
+// المفضلة
+// ============================================
+function toggleFavorite(id) {
+    const idx = favorites.indexOf(id);
+    const app = apps.find(a => a.id === id);
+    if (idx === -1) {
+        favorites.push(id);
+        showToast('success', `❤️ تمت إضافة "${app.title}" للمفضلة`);
+    } else {
+        favorites.splice(idx, 1);
+        showToast('warn', `تمت إزالة "${app.title}" من المفضلة`);
+    }
+    localStorage.setItem('appStoreFavs', JSON.stringify(favorites));
+    renderApps();
+    if (currentCategory === 'favorites') renderApps();
+    updateBadges();
+}
+
+// ============================================
+// نافذة التفاصيل
+// ============================================
+function openModal(id) {
+    const app = apps.find(a => a.id === id);
+    if (!app) return;
+    const isFav = favorites.includes(app.id);
+    const isInstalled = installed.includes(app.id);
+    const isInstalling = installingIds.has(id);
+
+    let primaryBtn = '';
+    if (isInstalled) {
+        primaryBtn = `<button class="modal-btn-primary installed" id="modalPrimary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px"><polygon points="5 3 19 12 5 21 5 3" fill="currentColor"/></svg>
+            فتح التطبيق
+        </button>`;
+    } else if (isInstalling) {
+        primaryBtn = `<button class="modal-btn-primary" disabled style="background:var(--tag-bg);color:var(--text-2)">جارٍ التثبيت...</button>`;
+    } else {
+        primaryBtn = `<button class="modal-btn-primary" id="modalPrimary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline;vertical-align:middle;margin-left:6px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            تثبيت الآن
+        </button>`;
+    }
+
+    modalContent.innerHTML = `
+        <div class="modal-header">
+            <div class="modal-icon">${appIconSVG(app)}</div>
+            <h3 class="modal-title">${app.title}</h3>
+            <div class="modal-dev">${app.dev}</div>
+            <div class="modal-rating">
+                <span>${renderStars(app.rating)}</span>
+                <span class="modal-rating-num">${app.rating} (${app.reviews} تقييم)</span>
+            </div>
+        </div>
+        <div class="modal-stats">
+            <div class="stat-item">
+                <div class="stat-value">${platformNames[app.platform]}</div>
+                <div class="stat-label">المنصة</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${app.size}</div>
+                <div class="stat-label">الحجم</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-value">${app.reviews}</div>
+                <div class="stat-label">التقييمات</div>
+            </div>
+        </div>
+        <div class="modal-section">
+            <h4>الوصف</h4>
+            <p>${app.desc}</p>
+        </div>
+        <div class="modal-section">
+            <h4>التصنيفات</h4>
+            <div class="modal-tags">
+                ${app.tags.map(t => `<span class="modal-tag">${t}</span>`).join('')}
+            </div>
+        </div>
+        <div class="modal-actions">
+            ${primaryBtn}
+            <button class="modal-btn-secondary ${isFav ? 'favorited' : ''}" id="modalFavBtn" title="المفضلة">
+                <svg viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+            </button>
+        </div>
+    `;
+    modalOverlay.classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    const primaryEl = document.getElementById('modalPrimary');
+    if (primaryEl && !isInstalling) {
+        primaryEl.addEventListener('click', () => {
+            if (isInstalled) {
+                openApp(id);
+            } else {
+                closeModal();
+                startInstall(id);
+            }
+        });
+    }
+    document.getElementById('modalFavBtn').addEventListener('click', () => {
+        toggleFavorite(id);
+        closeModal();
+    });
+}
+
+function closeModal() {
+    modalOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+modalClose.addEventListener('click', closeModal);
+modalOverlay.addEventListener('click', (e) => {
+    if (e.target === modalOverlay) closeModal();
+});
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+});
+
+// ============================================
+// البحث والتصنيفات
+// ============================================
+searchInput.addEventListener('input', (e) => {
+    currentSearch = e.target.value.trim();
+    renderApps();
+});
+
+categoriesBar.addEventListener('click', (e) => {
+    const chip = e.target.closest('.category-chip');
+    if (!chip) return;
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    currentCategory = chip.dataset.cat;
+    renderApps();
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+});
+
+favHeaderBtn.addEventListener('click', () => {
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    document.querySelector('[data-cat="favorites"]').classList.add('active');
+    currentCategory = 'favorites';
+    renderApps();
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+});
+
+myAppsBtn.addEventListener('click', () => {
+    document.querySelectorAll('.category-chip').forEach(c => c.classList.remove('active'));
+    document.querySelector('[data-cat="installed"]').classList.add('active');
+    currentCategory = 'installed';
+    renderApps();
+    window.scrollTo({ top: 200, behavior: 'smooth' });
+});
+
+// ============================================
+// Carousel
+// ============================================
+const featuredApps = [apps[6], apps[7], apps[10], apps[12], apps[18]];
+
+function renderCarousel() {
+    const track = document.getElementById('carouselTrack');
+    const dots = document.getElementById('carouselDots');
+
+    const slideBgs = [
+        'linear-gradient(135deg,#6366f1 0%,#8b5cf6 50%,#ec4899 100%)',
+        'linear-gradient(135deg,#f09433 0%,#e6683c 25%,#dc2743 50%,#cc2366 75%,#bc1888 100%)',
+        'linear-gradient(135deg,#10a37f 0%,#06b6d4 100%)',
+        'linear-gradient(135deg,#7c3aed 0%,#ec4899 100%)',
+        'linear-gradient(135deg,#007acc 0%,#1e9dd8 100%)'
+    ];
+
+    track.innerHTML = featuredApps.map((app, i) => `
+        <div class="carousel-slide" style="background: ${slideBgs[i]}">
+            <div class="slide-content">
+                <span class="slide-tag">تطبيق مميز ${i+1}</span>
+                <h3 class="slide-title">${app.title}</h3>
+                <p class="slide-desc">${app.desc}</p>
+                <button class="slide-btn" data-slide-id="${app.id}">اكتشف الآن</button>
+            </div>
+            <div class="slide-visual">${appIconSVG(app)}</div>
+        </div>
+    `).join('');
+
+    dots.innerHTML = featuredApps.map((_, i) =>
+        `<button class="carousel-dot ${i === 0 ? 'active' : ''}" data-dot="${i}"></button>`
+    ).join('');
+
+    track.querySelectorAll('[data-slide-id]').forEach(btn => {
+        btn.addEventListener('click', () => openModal(parseInt(btn.dataset.slideId)));
+    });
+
+    dots.querySelectorAll('[data-dot]').forEach(d => {
+        d.addEventListener('click', () => goToSlide(parseInt(d.dataset.dot)));
+    });
+}
+
+function goToSlide(idx) {
+    currentCarousel = (idx + featuredApps.length) % featuredApps.length;
+    document.getElementById('carouselTrack').style.transform = `translateX(${currentCarousel * 100}%)`;
+    document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+        d.classList.toggle('active', i === currentCarousel);
+    });
+}
+
+document.getElementById('carouselPrev').addEventListener('click', () => {
+    goToSlide(currentCarousel - 1);
+    resetCarouselTimer();
+});
+document.getElementById('carouselNext').addEventListener('click', () => {
+    goToSlide(currentCarousel + 1);
+    resetCarouselTimer();
+});
+
+function startCarouselAuto() {
+    carouselTimer = setInterval(() => goToSlide(currentCarousel + 1), 5000);
+}
+function resetCarouselTimer() {
+    clearInterval(carouselTimer);
+    startCarouselAuto();
+}
+
+// ============================================
+// الإحصائيات
+// ============================================
+function updateStats() {
+    document.getElementById('statTotal').textContent = apps.length;
+    document.getElementById('statInstalled').textContent = installed.length;
+    document.getElementById('statFavs').textContent = favorites.length;
+    const avg = apps.reduce((s, a) => s + a.rating, 0) / apps.length;
+    document.getElementById('statRating').textContent = avg.toFixed(1);
+}
+
+function updateBadges() {
+    if (favorites.length > 0) {
+        favBadge.textContent = favorites.length;
+        favBadge.style.display = 'flex';
+    } else {
+        favBadge.style.display = 'none';
+    }
+    if (installed.length > 0) {
+        installedBadge.textContent = installed.length;
+        installedBadge.style.display = 'flex';
+    } else {
+        installedBadge.style.display = 'none';
+    }
+}
+
+// ============================================
+// تبديل الوضع الفاتح/الداكن
+// ============================================
+function applyTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    if (theme === 'dark') {
+        themeIcon.innerHTML = '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>';
+    } else {
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
+    }
+    localStorage.setItem('appStoreTheme', theme);
+}
+
+themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.getAttribute('data-theme');
+    applyTheme(current === 'dark' ? 'light' : 'dark');
+});
+
+// ============================================
+// Toast
+// ============================================
+let toastTimer;
+function showToast(type, msg) {
+    toastMsg.textContent = msg;
+    toastIcon.className = 'toast-icon ' + type;
+    toastIcon.textContent = type === 'success' ? '✓' : type === 'warn' ? '!' : '⏳';
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+// ============================================
+// التهيئة
+// ============================================
+renderCategories();
+renderCarousel();
+renderApps();
+applyTheme(localStorage.getItem('appStoreTheme') || 'light');
+startCarouselAuto();
+</script>
+
+</body>
+</html>
